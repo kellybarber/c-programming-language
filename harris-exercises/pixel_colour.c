@@ -18,10 +18,9 @@
 
 int get_pixel_colour_bitwise(unsigned char red, unsigned char green, unsigned char blue) 
 {
-    unsigned char bytes[4] = {0x00, blue, green, red};
     unsigned int colour = 0;
 
-    colour = (bytes[0]) | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
+    colour = 0x00 | (blue << 8) | (green << 16) | (red << 24);
 
     printf("Bitwise: %i \n", colour);
 
