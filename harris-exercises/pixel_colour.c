@@ -16,28 +16,50 @@
 #include <stdio.h>
 #include <string.h>
 
+// int get_pixel_colour_memcpy(unsigned char red, unsigned char green, unsigned char blue) 
+// {
+//     unsigned char bytes[4] = {red, green, blue};
+//     unsigned int colour = 0;
+
+//     memcpy(&colour, bytes, sizeof(colour));
+
+//     printf("Memcpy: %i %x \n", colour, colour);
+
+//     return colour;
+// };
+
 int get_pixel_colour_bitwise(unsigned char red, unsigned char green, unsigned char blue) 
 {
     unsigned int colour = 0;
 
-    colour = 0x00 | (blue << 8) | (green << 16) | (red << 24);
+    colour = red | (green << 8) | (blue << 16);
 
-    printf("Bitwise: %i \n", colour);
+    printf("Bitwise: %i %x \n", colour, colour);
 
     return colour;
 };
 
-int get_pixel_colour_memcpy(unsigned char red, unsigned char green, unsigned char blue) 
+struct rgb {
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+};
+
+struct rgb get_pixel_rgb(int colour)
 {
-    unsigned char bytes[4] = {0x00, blue, green, red};
-    unsigned int colour = 0;
+    return (struct rgb) {
+        .r = colour & 0xff,
+        .g = (colour >> 8) & 0xff,
+        .b = (colour >> 16) & 0xff,
+    };
+}
 
-    memcpy(&colour, bytes, sizeof(colour));
-
-    printf("Memcpy: %i \n", colour);
-
-    return colour;
-};
+void get_pixel_rgb_pointers(unsigned char *r, unsigned char *g, unsigned char *b, unsigned int c) 
+{
+    *r = c & 0xff;
+    *g = (c >> 8) & 0xff;
+    *b = (c >> 16) & 0xff;
+}
 
 int main(void) 
 {
@@ -47,5 +69,12 @@ int main(void)
     unsigned int pixel_colour = 0;
 
     pixel_colour = get_pixel_colour_bitwise(red, green, blue);
-    pixel_colour = get_pixel_colour_memcpy(red, green, blue);
+
+    struct rgb pixel_colour_int = get_pixel_rgb(pixel_colour);
+
+    printf("%hhx %hhx %hhx \n", pixel_colour_int.r, pixel_colour_int.g, pixel_colour_int.b);
+
+    get_pixel_rgb_pointers(&red, &green, &blue, 0xD96AA7);
+
+    printf("%hhx %hhx %hhx \n", red, green, blue);
 };
